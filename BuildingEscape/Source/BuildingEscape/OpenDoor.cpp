@@ -20,14 +20,7 @@ void UOpenDoor::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	//Find Actor
-	AActor* Owner = GetOwner();
-	//Get current yaw
-	float CurrYaw = Owner->GetActorRotation().Yaw;
-	//Create new rotator with currentyaw-70
-	FRotator NewRotation = FRotator(0.0f, CurrYaw-OpenAngle, 0.0f);
-	//Set rotation
-	Owner->SetActorRotation(NewRotation);
+	
 }
 
 
@@ -37,5 +30,27 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+	//Poll the trigger volume
+	//If the TriggerActor is in the trigger volume
+	if (PressurePlate->IsOverlappingActor(TriggerActor))
+	{
+		//Call the OpenDoor function
+		OpenDoor();
+		UE_LOG(LogTemp, Warning, TEXT("Open Door Trigger Called"));
+	}
+	
+		
 }
 
+
+void UOpenDoor::OpenDoor()
+{
+	//Find Actor
+	AActor* Owner = GetOwner();
+	//Get current yaw
+	float CurrYaw = Owner->GetActorRotation().Yaw;
+	//Create new rotator with currentyaw-70
+	FRotator NewRotation = FRotator(0.0f, CurrYaw - OpenAngle, 0.0f);
+	//Set rotation
+	Owner->SetActorRotation(NewRotation);
+}
