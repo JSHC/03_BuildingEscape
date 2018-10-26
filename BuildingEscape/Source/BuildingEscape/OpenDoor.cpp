@@ -2,6 +2,8 @@
 
 #include "OpenDoor.h"
 #include "GameFramework/Actor.h"
+#include "Engine/World.h"
+#include "GameFramework/PlayerController.h"
 
 // Sets default values for this component's properties
 UOpenDoor::UOpenDoor()
@@ -20,6 +22,8 @@ void UOpenDoor::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+	//Get the pawn of the first player controller and set it to the TriggerActor
+	TriggerActor = GetWorld()->GetFirstPlayerController()->GetPawn();
 	
 }
 
@@ -32,11 +36,13 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	// ...
 	//Poll the trigger volume
 	//If the TriggerActor is in the trigger volume
-	if (PressurePlate->IsOverlappingActor(TriggerActor))
+	
+	if (PressurePlate->IsOverlappingActor(TriggerActor) && bOpenDoorHasTriggered == false)
 	{
+		//Make sure the doors aren't already open (This is to not make the doors rotate on every frame)
+		bOpenDoorHasTriggered = true;
 		//Call the OpenDoor function
 		OpenDoor();
-		UE_LOG(LogTemp, Warning, TEXT("Open Door Trigger Called"));
 	}
 	
 		

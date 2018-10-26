@@ -36,6 +36,7 @@ private:
 	UPROPERTY(EditAnywhere)
 		ATriggerVolume* PressurePlate;
 
-	UPROPERTY(EditAnyWhere)
-		AActor* TriggerActor;
+	AActor* TriggerActor;
+
+	bool bOpenDoorHasTriggered = false;
 };
