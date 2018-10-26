@@ -22,6 +22,10 @@ void UOpenDoor::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+	//Set the owning door
+	Owner = GetOwner();
+
+	StartAngle = Owner->GetActorRotation().Yaw;
 	//Get the pawn of the first player controller and set it to the TriggerActor
 	TriggerActor = GetWorld()->GetFirstPlayerController()->GetPawn();
 	
@@ -37,26 +41,31 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	//Poll the trigger volume
 	//If the TriggerActor is in the trigger volume
 	
-	if (PressurePlate->IsOverlappingActor(TriggerActor) && bOpenDoorHasTriggered == false)
+	if (PressurePlate->IsOverlappingActor(TriggerActor))
 	{
-		//Make sure the doors aren't already open (This is to not make the doors rotate on every frame)
-		bOpenDoorHasTriggered = true;
 		//Call the OpenDoor function
 		OpenDoor();
+		LastDoorOpenTime = GetWorld()->GetTimeSeconds();
+		//UE_LOG(LogTemp, Warning, TEXT("LastDoorOpenTime: %f"), LastDoorOpenTime);
 	}
-	
+	if (GetWorld()->GetTimeSeconds() - DoorCloseDelay >= LastDoorOpenTime)
+	{
+		//Close the door
+		CloseDoor();
+	}
+	GetWorld()->GetTimeSeconds();
 		
 }
 
 
 void UOpenDoor::OpenDoor()
 {
-	//Find Actor
-	AActor* Owner = GetOwner();
-	//Get current yaw
-	float CurrYaw = Owner->GetActorRotation().Yaw;
-	//Create new rotator with currentyaw-70
-	FRotator NewRotation = FRotator(0.0f, CurrYaw - OpenAngle, 0.0f);
-	//Set rotation
-	Owner->SetActorRotation(NewRotation);
+	//Owner->SetActorRotation(FRotator(0.0f, CurrYaw - OpenAngle, 0.0f));
+	Owner->SetActorRotation(FRotator(0.0f, StartAngle-OpenAngle, 0.0f));
+}
+
+void UOpenDoor::CloseDoor()
+{
+	//Owner->SetActorRotation(FRotator(0.0f, CurrYaw + OpenAngle, 0.0f));
+	Owner->SetActorRotation(FRotator(0.0f, StartAngle, 0.0f));
 }
