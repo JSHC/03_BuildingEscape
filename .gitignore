@@ -8,8 +8,12 @@
 */DerivedDataCache
 */Saved
 /BuildingEscape/Content/StarterContent
+*/.vs/BuildingEscape/v15/ipch
 
 #################################
 # Visual Studio Generated Files #
 #################################
 *.db
+*.db-wal
+*.db-shm
+
