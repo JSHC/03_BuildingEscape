@@ -25,7 +25,7 @@ void UOpenDoor::BeginPlay()
 	//Get current yaw
 	float CurrYaw = Owner->GetActorRotation().Yaw;
 	//Create new rotator with currentyaw-70
-	FRotator NewRotation = FRotator(0.0f, CurrYaw-70.0f, 0.0f);
+	FRotator NewRotation = FRotator(0.0f, CurrYaw-OpenAngle, 0.0f);
 	//Set rotation
 	Owner->SetActorRotation(NewRotation);
 }
