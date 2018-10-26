@@ -20,8 +20,11 @@ void UPositionReport::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+	//Get the object name
 	FString ObjectName = GetOwner()->GetName();
-	UE_LOG(LogTemp, Warning, TEXT("PositionReport Reporting for duty on %s"),*ObjectName);
+	//Get the position of the object and convert it to a string
+	FString ObjectPos = GetOwner()->GetTransform().GetLocation().ToString();
+	UE_LOG(LogTemp, Warning, TEXT("%s is at %s"),*ObjectName, *ObjectPos);
 	
 }
 
