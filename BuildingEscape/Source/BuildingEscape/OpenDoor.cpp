@@ -22,8 +22,10 @@ void UOpenDoor::BeginPlay()
 	// ...
 	//Find Actor
 	AActor* Owner = GetOwner();
-	//Create rotator
-	FRotator NewRotation = FRotator(0.0f, -70.0f, 0.0f);
+	//Get current yaw
+	float CurrYaw = Owner->GetActorRotation().Yaw;
+	//Create new rotator with currentyaw-70
+	FRotator NewRotation = FRotator(0.0f, CurrYaw-70.0f, 0.0f);
 	//Set rotation
 	Owner->SetActorRotation(NewRotation);
 }
