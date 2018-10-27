@@ -27,16 +27,34 @@ void UGrabber::BeginPlay()
 	// ...
 	//Look for attached physics handle
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	
 	//If physicshandle is found
 	if (PhysicsHandle)
 	{
-
+		//TODO
 	}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("PhysicsHandle component not found on %s"), *GetOwner()->GetName());
 	}
-	
+
+	//Look for attached InputComponent
+	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+	//If InputComponent is found
+	if (InputComponent)
+	{
+		//TODO
+		UE_LOG(LogTemp, Warning, TEXT("InputComponent found on %s"), *GetOwner()->GetName());
+		//Bind the input action
+		InputComponent->BindAction("Grab",
+			IE_Pressed,
+			this,
+			&UGrabber::Grab);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("InputComponent not found on %s"), *GetOwner()->GetName());
+	}
 }
 
 
@@ -85,5 +103,11 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	}
 	
 	/// check if player is looking at a grabbable actor within distance
+}
+
+// Ray-cast and grab what's in reach
+void UGrabber::Grab()
+{
+
 }
 
