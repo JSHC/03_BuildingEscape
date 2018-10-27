@@ -36,7 +36,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
-	// Get player viewpoint
+	/// Get player viewpoint
 	FVector PlayerViewPointLocation;
 	FRotator PlayerViewPointRotation;
 	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
@@ -58,8 +58,22 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		0.f,
 		0.f,
 		10.f);
-
-	// Ray-cast to player reach
-	// check if player is looking at a grabbable actor within distance
+	/// Setup query params
+	FCollisionQueryParams TraceParams(FName(TEXT("")), false, GetOwner());
+	/// Ray-cast to player reach
+	FHitResult LineTraceHit;
+	GetWorld()->LineTraceSingleByObjectType(
+		OUT LineTraceHit,
+		PlayerViewPointLocation,
+		LineTraceEnd,
+		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
+		TraceParams
+	);
+	if (LineTraceHit.GetActor())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Hit: %s"), *LineTraceHit.GetActor()->GetName());
+	}
+	
+	/// check if player is looking at a grabbable actor within distance
 }
 
