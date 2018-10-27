@@ -25,6 +25,8 @@ protected:
 	void OpenDoor();
 	void CloseDoor();
 
+	
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -42,8 +44,7 @@ private:
 		float DoorCloseDelay = 0.5f;
 
 	float LastDoorOpenTime;
-	AActor* TriggerActor;
 	AActor* Owner; //The owning door
 
-	bool bOpenDoorHasTriggered = false;
+	float GetTotalMassOfActorsOnPLate();
 };
