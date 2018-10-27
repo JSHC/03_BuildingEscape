@@ -19,4 +19,5 @@
 *.db-wal
 *.db-shm
 *.opendb
+*.sln
 
