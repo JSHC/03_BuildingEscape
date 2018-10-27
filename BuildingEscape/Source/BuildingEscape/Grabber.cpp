@@ -136,14 +136,16 @@ FVector UGrabber::GetReachLineEnd() const
 void UGrabber::Grab()
 {
 	// Line trace and try to reach actors with physics body collision channel set
+	UE_LOG(LogTemp,Warning, TEXT("Grab key pressed"))
 	FHitResult LineTraceHit = GetFirstPhysicsBodyInReach();
-	UPrimitiveComponent* ComponentToGrab = LineTraceHit.GetComponent();
-	AActor* ActorToGrab = ComponentToGrab->GetOwner();
 	//Check if actor isn't null to avoid crashes
-	if (LineTraceHit.GetActor())
+	if (LineTraceHit.GetActor() != nullptr)
 	{
 		//Grab the component at it's location without rotating it
-		PhysicsHandle->GrabComponentAtLocationWithRotation(LineTraceHit.GetComponent(), NAME_None, ActorToGrab->GetActorLocation(), ActorToGrab->GetActorRotation());
+		PhysicsHandle->GrabComponentAtLocationWithRotation(LineTraceHit.GetComponent(), 
+			NAME_None, 
+			LineTraceHit.GetComponent()->GetOwner()->GetActorLocation(), 
+			LineTraceHit.GetComponent()->GetOwner()->GetActorRotation());
 	}
 	
 }
