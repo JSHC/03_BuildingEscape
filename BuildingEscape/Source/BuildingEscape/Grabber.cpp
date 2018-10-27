@@ -38,18 +38,18 @@ void UGrabber::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("PhysicsHandle component not found on %s"), *GetOwner()->GetName());
 	}
 
-	//Look for attached InputComponent
+	//Set inputcomponent
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
-	//If InputComponent is found
+	
+	// Check for InputComponent
 	if (InputComponent)
 	{
-		//TODO
 		UE_LOG(LogTemp, Warning, TEXT("InputComponent found on %s"), *GetOwner()->GetName());
-		//Bind the input action
-		InputComponent->BindAction("Grab",
-			IE_Pressed,
-			this,
-			&UGrabber::Grab);
+		
+		/// Bind the input actions 
+		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
+		
 	}
 	else
 	{
@@ -72,8 +72,6 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		OUT PlayerViewPointRotation
 	);
 
-	//Log out to test
-	/*UE_LOG(LogTemp, Warning, TEXT("Position: %s | Rotation: %s"), *PlayerViewPointLocation.ToString(),*PlayerViewPointRotation.ToString());*/
 	//Draw a red trace in the world to visualise
 	FVector PlayerSize = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorScale3D();
 	FVector LineTraceEnd = PlayerViewPointLocation + PlayerViewPointRotation.Vector()*Reach;
@@ -86,8 +84,10 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		0.f,
 		0.f,
 		10.f);
+
 	/// Setup query params
 	FCollisionQueryParams TraceParams(FName(TEXT("")), false, GetOwner());
+
 	/// Ray-cast to player reach
 	FHitResult LineTraceHit;
 	GetWorld()->LineTraceSingleByObjectType(
@@ -97,6 +97,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
 		TraceParams
 	);
+
 	if (LineTraceHit.GetActor())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Hit: %s"), *LineTraceHit.GetActor()->GetName());
@@ -108,6 +109,11 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 // Ray-cast and grab what's in reach
 void UGrabber::Grab()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Grab key pressed!"));
+}
 
+void UGrabber::Release()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Grab key released"));
 }
 

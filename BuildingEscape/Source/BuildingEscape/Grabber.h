@@ -31,7 +31,9 @@ private:
 	float Reach = 100.f;
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 	UInputComponent* InputComponent = nullptr;
-	// Ray-cast and grab what's in reach
+
+	// Grab and release functions
 	void Grab();
+	void Release();
 
 };
