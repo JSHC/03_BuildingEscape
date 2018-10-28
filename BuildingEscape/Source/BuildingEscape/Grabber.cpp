@@ -38,13 +38,13 @@ void UGrabber::FindPhysicsHandleComponent()
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 
 	//If physicshandle is found
-	if (PhysicsHandle)
+	if (!PhysicsHandle)
 	{
-		//TODO
+		UE_LOG(LogTemp, Error, TEXT("PhysicsHandle component not found on %s"), *GetOwner()->GetName());
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("PhysicsHandle component not found on %s"), *GetOwner()->GetName());
+		
 	}
 }
 
@@ -54,18 +54,16 @@ void UGrabber::SetupInputComponent()
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
 
 	// Check for InputComponent
-	if (InputComponent)
+	if (!InputComponent)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("InputComponent found on %s"), *GetOwner()->GetName());
-
-		/// Bind the input actions 
-		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
-		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
-
+		UE_LOG(LogTemp, Error, TEXT("InputComponent not found on %s"), *GetOwner()->GetName());
+		return;
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("InputComponent not found on %s"), *GetOwner()->GetName());
+		/// Bind the input actions 
+		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
 	}
 }
 
@@ -77,6 +75,10 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+	if (!PhysicsHandle)
+	{
+		return;
+	}
 	//Check if we're holding a component
 	if (PhysicsHandle->GrabbedComponent)
 	{
@@ -135,6 +137,10 @@ FVector UGrabber::GetReachLineEnd() const
 
 void UGrabber::Grab()
 {
+	if (!PhysicsHandle)
+	{
+		return;
+	}
 	// Line trace and try to reach actors with physics body collision channel set
 	UE_LOG(LogTemp,Warning, TEXT("Grab key pressed"))
 	FHitResult LineTraceHit = GetFirstPhysicsBodyInReach();
@@ -152,6 +158,10 @@ void UGrabber::Grab()
 
 void UGrabber::Release()
 {
+	if (!PhysicsHandle)
+	{
+		return;
+	}
 	if (PhysicsHandle->GrabbedComponent)
 	{
 		PhysicsHandle->ReleaseComponent();
