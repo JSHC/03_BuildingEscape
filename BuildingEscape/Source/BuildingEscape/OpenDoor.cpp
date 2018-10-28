@@ -33,8 +33,9 @@ void UOpenDoor::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("No TriggerVolume found on %s (%s class)"), *Owner->GetName(), *this->GetName());
 	}
+	//Get yaw at start to enable us to have multiple doors that are rotated differently
 	StartAngle = Owner->GetActorRotation().Yaw;
-	//Get the pawn of the first player controller and set it to the TriggerActor
+
 	
 }
 
@@ -65,7 +66,10 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 void UOpenDoor::OpenDoor()
 {
-	Owner->SetActorRotation(FRotator(0.0f, StartAngle-OpenAngle, 0.0f));
+	//Owner->SetActorRotation(FRotator(0.0f, StartAngle-OpenAngle, 0.0f));
+
+	///Broadcast the OnOpenRequest event
+	OnOpenRequest.Broadcast();
 }
 
 void UOpenDoor::CloseDoor()
