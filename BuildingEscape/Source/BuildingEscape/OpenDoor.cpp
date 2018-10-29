@@ -33,10 +33,6 @@ void UOpenDoor::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("No TriggerVolume found on %s (%s class)"), *Owner->GetName(), *this->GetName());
 	}
-	//Get yaw at start to enable us to have multiple doors that are rotated differently
-	StartAngle = Owner->GetActorRotation().Yaw;
-
-	
 }
 
 
@@ -48,34 +44,17 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	// ...
 	//Poll the trigger volume
 	//If the total mass of actors in the volume is greater than some value
-	if (GetTotalMassOfActorsOnPLate() >= 60.f)
+	if (GetTotalMassOfActorsOnPLate() >= TriggerMass)
 	{
-		//Call the OpenDoor function
-		OpenDoor();
-		LastDoorOpenTime = GetWorld()->GetTimeSeconds();
-		//UE_LOG(LogTemp, Warning, TEXT("LastDoorOpenTime: %f"), LastDoorOpenTime);
+		///Broadcast the OnOpenRequest event
+		OnOpen.Broadcast();
 	}
-	if (GetWorld()->GetTimeSeconds() - DoorCloseDelay >= LastDoorOpenTime)
+	else
 	{
 		//Close the door
-		CloseDoor();
+		OnClose.Broadcast();
 	}
 		
-}
-
-
-void UOpenDoor::OpenDoor()
-{
-	//Owner->SetActorRotation(FRotator(0.0f, StartAngle-OpenAngle, 0.0f));
-
-	///Broadcast the OnOpenRequest event
-	OnOpenRequest.Broadcast();
-}
-
-void UOpenDoor::CloseDoor()
-{
-	//Owner->SetActorRotation(FRotator(0.0f, CurrYaw + OpenAngle, 0.0f));
-	Owner->SetActorRotation(FRotator(0.0f, StartAngle, 0.0f));
 }
 
 float UOpenDoor::GetTotalMassOfActorsOnPLate()
